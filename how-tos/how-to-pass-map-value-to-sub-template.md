@@ -11,7 +11,7 @@ OpenStack Heat allows custom resources to be instantiated within a Heat stack by
 
 (Alternatively, you can define it as a resource type in the resource_registry within the environment file.)
 
-Data values can be passed to these sub-templates by setting property values in the resource within the parent template. These resource properties will then pass their values to parameters of the same name defined within the sub-template. These sub-template parameters must have a data type specified, and when passing a map/dict value to a sub-template, the correct data type to use is "json".
+Data values can be passed to these sub-templates by setting property values in the resource within the parent template. These resource properties will then pass their values to parameters of the same name defined within the sub-template. These sub-template parameters must have a data type specified, and when passing a map/dict value to a sub-template, the correct data type to use is `json`.
 
 As an example, suppose a calling template wanted to pass the addresses attribute of a OS::Nova::Server resource (a map value) to a sub-template defined in the example.yaml template:
 
@@ -32,7 +32,9 @@ parameters:
 
 ## Full test templates
 
-_parent.yaml_
+---
+
+_parent.yaml:_
 ```yaml
 heat_template_version: queens
 
@@ -85,7 +87,9 @@ outputs:
         value: { get_attr: [ example_sub, heat_value ] }
 ```
 
-_example.yaml_
+---
+
+_example.yaml:_
 ```yaml
 heat_template_version: queens
 
