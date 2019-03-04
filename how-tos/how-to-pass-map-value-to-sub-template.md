@@ -1,5 +1,5 @@
 # How to pass a map/dict value to a Heat sub-template
-- **Tested on: OpenStack Queens**
+**Tested on:** OpenStack Queens
 
 ## Solution
 OpenStack Heat allows custom resources to be instantiated within a Heat stack by referencing the sub-template's file name as the resource type:
@@ -31,9 +31,6 @@ parameters:
 ```
 
 ## Full test templates
-
----
-
 _parent.yaml:_
 ```yaml
 heat_template_version: queens
