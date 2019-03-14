@@ -1,0 +1,49 @@
+# This is a basic example of how to instantiate a vSRX 3.0 in Contrail using
+# OpenStack Heat. It creates the necessary flavor as well as a management
+# network. The only thing that must be present before executing this template
+# is the image, which is provided via the vsrx_image parameter.
+#
+# Example of image creation:
+# glance image-create --name vsrx3-18.4R1 --visibility public --container-format bare --disk-format qcow2 --file junos-vsrx3-x86-64-18.4R1.8.qcow2
+#
+# Tested with vSRX 3.0 18.4R1 on Contrail Cloud 13.0.2 (Contrail Networking 5.0.2)
+
+heat_template_version: queens
+
+parameters:
+    vsrx_image:
+        type: string
+
+resources:
+    vsrx_vm:
+        type: OS::Nova::Server
+        properties:
+            name: "basic-vsrx3"
+            flavor: { get_resource: vsrx_flavor }
+            image: { get_param: vsrx_image }
+            networks:
+            - network: {get_resource: vsrx_mgmt}
+
+    vsrx_ipam:
+        type: OS::ContrailV2::NetworkIpam
+        properties:
+            name: "basic-vsrx3-ipam"
+
+    vsrx_mgmt:
+        type: OS::ContrailV2::VirtualNetwork
+        properties:
+            name: "basic-vsrx3-mgmt-vn"
+            network_ipam_refs: [{get_resource: vsrx_ipam}]
+            network_ipam_refs_data:
+            - network_ipam_refs_data_ipam_subnets:
+                - network_ipam_refs_data_ipam_subnets_addr_from_start: true
+                  network_ipam_refs_data_ipam_subnets_subnet: { network_ipam_refs_data_ipam_subnets_subnet_ip_prefix: "10.0.0.0",
+                    network_ipam_refs_data_ipam_subnets_subnet_ip_prefix_len: "24"}
+
+    vsrx_flavor:
+        type: OS::Nova::Flavor
+        properties:
+            name: "basic-vsrx3-flavor"
+            ram: 4096
+            vcpus: 2
+            disk: 20
